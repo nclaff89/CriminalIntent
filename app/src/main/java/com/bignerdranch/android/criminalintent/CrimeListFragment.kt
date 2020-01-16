@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val TAG = "CrimeListFragment"
 
@@ -68,12 +71,32 @@ class CrimeListFragment : Fragment() {
         fun bind(crime: Crime){
             this.crime = crime
             titleTextView.text = this.crime.title
-            dateTextView.text = this.crime.date.toString()
+            dateTextView.text = formatDate(this.crime.date)
             solvedImageView.visibility = if(crime.isSolved) {
                 View.VISIBLE
             }else{
                 View.GONE
             }
+        }
+
+        /**
+         * Chapter10 challenge 1
+         */
+        private fun formatDate(date: Date): String{
+            /**
+             * The next 3 lines are for the advanced challenge
+             * that includes the day of the week with the date
+              */
+//        var date = date
+//        val formatter = SimpleDateFormat("E,MMM,DD,YYYY")
+//        val newDate = formatter.format(date)
+            /**
+             * The next 2 lines are for the standard chapter 10 challenge, for advanced comment out
+             * next 2 lines and uncomment out the previous 3.
+             */
+            val date = date
+            val newDate = DateFormat.getDateInstance().format(date)
+            return newDate
         }
 
         override fun onClick(v: View?) {

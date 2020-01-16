@@ -1,7 +1,7 @@
 package com.bignerdranch.android.criminalintent
 
 import androidx.lifecycle.ViewModel
-import java.text.SimpleDateFormat
+
 
 class CrimeListViewModel: ViewModel() {
 
@@ -15,6 +15,5 @@ class CrimeListViewModel: ViewModel() {
             crimes += crime
         }
     }
-
 
 }
