@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.bignerdranch.android.criminalintent.database.CrimeDatabase
 import java.lang.IllegalStateException
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "crime-database"
 class CrimeRepository private constructor(context: Context) {
@@ -17,6 +18,19 @@ class CrimeRepository private constructor(context: Context) {
     ).build()
 
     private val crimeDao = database.crimeDao()
+    private val executor = Executors.newSingleThreadExecutor()
+
+    fun upDateCrime(crime: Crime){
+        executor.execute {
+            crimeDao.updateCrime(crime)
+        }
+    }
+
+    fun addCrime(crime:Crime){
+        executor.execute {
+            crimeDao.addCrime(crime)
+        }
+    }
 
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
 
