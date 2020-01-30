@@ -1,5 +1,4 @@
 package com.bignerdranch.android.criminalintent
-
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -76,9 +76,11 @@ class CrimeListFragment : Fragment() {
         callbacks = null
     }
 
+    /**
+     * chapter 12 challenge
+     */
     private fun updateUI(crimes: List<Crime>){
-        adapter = CrimeAdapter(crimes)
-        crimeRecyclerView.adapter = adapter
+        adapter?.submitList(crimes)
     }
 
     private  inner class CrimeHolder(view: View)
@@ -110,22 +112,39 @@ class CrimeListFragment : Fragment() {
         }
     }
 
+    /**
+     * Chapter 12 challenge make Crime adappter extend
+     * ListAdapter instead of Adapter
+     */
     private inner class CrimeAdapter(var crimes: List<Crime>)
-        :RecyclerView.Adapter<CrimeHolder>(){
+        :androidx.recyclerview.widget.ListAdapter<Crime, CrimeHolder>(CrimeDiffCallback()){
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
             return CrimeHolder(view)
         }
 
-        override fun getItemCount() = crimes.size
 
 
         override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
-            val crime = crimes[position]
-            holder.bind(crime)
+            val item  = getItem(position)
+            holder.bind(item)
 
         }
 
+    }
+
+    /**
+     * Chapter 12 challenge 1
+     */
+    private inner class CrimeDiffCallback: DiffUtil.ItemCallback<Crime>(){
+        override fun areItemsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+           return oldItem == newItem
+        }
     }
 
     companion object{
@@ -133,5 +152,6 @@ class CrimeListFragment : Fragment() {
             return CrimeListFragment()
         }
     }
+
 
 }
