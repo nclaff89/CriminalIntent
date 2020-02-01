@@ -36,6 +36,13 @@ class CrimeListFragment : Fragment() {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
 
+    /**
+     * Chapter 13 challenge so we can have a list of crime to work with.
+     */
+    private val crimeDetailViewModel: CrimeDetailViewModel by lazy{
+        ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
+    }
+
     override fun onAttach(context: Context){
         super.onAttach(context)
         callbacks = context as Callbacks?
@@ -60,6 +67,14 @@ class CrimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /**
+         * Chapter 13 challenge, just to get some crimes loaded
+         * Be sure to comment this out after you have used it a couple of times,
+         * or every time the recyclerview loads you will get 11 more crimes added to the
+         * DB.. We just need a few to complete the challenge.
+         */
+        //crimeDetailViewModel.addAFewCrimes()
+
         crimeListViewModel.crimeListLiveData.observe(
             viewLifecycleOwner,
             Observer { crimes ->

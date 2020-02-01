@@ -17,11 +17,22 @@ private const val TAG = "CrimeFragment"
 private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 private const val REQUEST_DATE= 0
-class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
+
+/**
+ * Chapter 13 challenge
+ */
+private const val DIALOG_TIME = "DialogTime"
+private const val REQUEST_TIME = 1
+class CrimeFragment :Fragment(), DatePickerFragment.Callbacks, TimePickerFragment.Callbacks {
     private lateinit var crime: Crime
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
+
+    /**
+     * Chapter 13 Challenge
+     */
+    private lateinit var timeButton: Button
 
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy{
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
@@ -44,6 +55,10 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
 
         titleField = view.findViewById(R.id.crime_title) as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
+        /**
+         * CHapter 13 challenge
+         */
+        timeButton = view.findViewById(R.id.crime_time) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
 
         solvedCheckBox.apply{
@@ -96,9 +111,23 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
         updateUI()
     }
 
+    /**
+     * Chapter 13 challenge
+     */
+    override fun onTimelected(time: String) {
+        crime.time = time
+        updateUI()
+    }
+
+
+
     private fun updateUI(){
         titleField.setText(crime.title)
         dateButton.text = crime.date.toString()
+        /**
+         * Chapter 13 challenge
+         */
+        timeButton.text = crime.time
         solvedCheckBox.apply{
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
@@ -110,6 +139,18 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
+
+        /**
+         * Chapter 13 challenge
+         */
+        timeButton.setOnClickListener {
+            TimePickerFragment.newInstance(crime.time).apply{
+                setTargetFragment(this@CrimeFragment, REQUEST_TIME)
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_TIME)
+            }
+        }
+
+
     }
 
     companion object {
@@ -123,5 +164,7 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
             }
         }
     }
+
+
 
 }

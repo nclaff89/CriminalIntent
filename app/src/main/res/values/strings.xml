@@ -5,4 +5,7 @@
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
     <string name="crime_sovled_label">Solved</string>
+
+    <!-- Chapter 13 Challenge -->
+    <string name="enter_time_button">Enter Time of Crime</string>
 </resources>
