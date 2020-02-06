@@ -7,4 +7,8 @@
     <string name="crime_sovled_label">Solved</string>
 
     <string name="new_crime">New Crime</string>
+
+    <!-- CHAPTER 14 CHALLENGE -->
+    <string name="no_crimes">There are no reported crimes.</string>
+    <string name="add_crime">New Crime</string>
 </resources>
