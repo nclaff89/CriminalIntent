@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,20 +11,27 @@ import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import java.util.*
+
 private const val TAG = "CrimeFragment"
 private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 private const val REQUEST_DATE= 0
 private const val REQUEST_CONTACT = 1
+/**
+ * chapter 15 challenge
+ */
+private const val REQUEST_NUMBER = 2
 private const val DATE_FORMAT = "EEE, MMM, dd"
 class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
     private lateinit var crime: Crime
@@ -32,6 +40,11 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
     private lateinit var solvedCheckBox: CheckBox
     private lateinit var reportButton:Button
     private lateinit var suspectButton: Button
+
+    /**
+     * Chapter 15 challenge
+     */
+    private lateinit var confrontSuspectButton: Button
 
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy{
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
@@ -57,6 +70,12 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
         reportButton = view.findViewById(R.id.crime_report) as Button
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
+
+        /**
+         * Chapter 15 challenge
+         */
+        confrontSuspectButton = view.findViewById(R.id.call_suspect) as Button
+
 
         solvedCheckBox.apply{
             setOnCheckedChangeListener { _, isChecked ->
@@ -134,6 +153,16 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
             }
         }
 
+        /**
+         * Chapter 15 challenge
+         */
+        confrontSuspectButton.setOnClickListener {
+            val telNum = Uri.parse("tel: ${crime.suspectNumber}")
+            val intent = Intent(Intent.ACTION_DIAL, telNum)
+            startActivity(intent)
+
+        }
+
 
     }
 
@@ -168,8 +197,12 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
             requestCode == REQUEST_CONTACT && data != null ->{
                 val contactUri: Uri? = data.data
                 //specify which fields you want your query to return values for
-                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
-                //perform your query - the contactUri is like a "where" clause here
+                /**
+                 * Chapter 15 chalelnge, alter this array to take in the contacts id too
+                 */
+                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts._ID)
+
+//                //perform your query - the contactUri is like a "where" clause here
                 val cursor = contactUri?.let {
                     requireActivity().contentResolver
                         .query(it, queryFields, null, null, null)
@@ -187,7 +220,52 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
                     crime.suspect = suspect
                     crimeDetailViewModel.saveCrime(crime)
                     suspectButton.text = suspect
+
+                    /**
+                     * Chapter 15 challenge,
+                     * !!!!IMPORTANT!!!! be sure to add permissions to Manfifest as well.
+                     */
+                    val id = it.getString(1)
+                    Log.d("ID", "ID = $id")
+
+
+
+                    val hasReadContactsPermission = ContextCompat.checkSelfPermission(
+                        activity!!,
+                        Manifest.permission.READ_CONTACTS
+                    )
+                    if (hasReadContactsPermission != PackageManager.PERMISSION_GRANTED) { // See: http://stackoverflow.com/a/33080682
+                        requestPermissions(
+                            arrayOf(Manifest.permission.READ_CONTACTS),
+                            REQUEST_NUMBER
+                        )
+                    } else {
+                        val phoneCursor = contactUri?.let{
+                            requireActivity().contentResolver
+                                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                    null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = $id",
+                                    null, null)
+                        }
+                        phoneCursor?.moveToFirst()
+                        val number = phoneCursor?.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                        Log.d("number", "Number = $number")
+                        crime.suspectNumber = number ?: ""
+                        crimeDetailViewModel.saveCrime(crime)
+                        /**
+                         * This is just for testing to see that the number
+                         * is being tested. This can be added here, but it won't survive screen rotation.
+                         * I like the button to say "confront suspect" anyways.
+                         */
+                        //confrontSuspectButton.text = number
+
+                    }
+
+
+
                 }
+
+
             }
         }
     }

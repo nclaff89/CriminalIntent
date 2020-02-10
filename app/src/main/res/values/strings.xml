@@ -20,4 +20,7 @@
     <string name="crime_report_suspect">the suspect is %s.</string>
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
     <string name="send_report">Send crime report via</string>
+
+    <!-- CHAPTER 15 CHALLENGE -->
+    <string name="confront_suspect">Confront Suspect</string>
 </resources>
