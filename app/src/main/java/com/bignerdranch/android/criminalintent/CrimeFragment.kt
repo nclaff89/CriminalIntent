@@ -15,9 +15,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.BundleCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.criminalintent.dialog.ImageDialog
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.*
 private const val TAG = "CrimeFragment"
@@ -27,6 +30,11 @@ private const val REQUEST_DATE= 0
 private const val REQUEST_CONTACT = 1
 private const val REQUEST_PHOTO = 2
 private const val DATE_FORMAT = "EEE, MMM, dd"
+
+/**
+ * Chapter 16 challenge 1
+ */
+private const val PHOTO_TAG = 3
 class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
     private lateinit var crime: Crime
     private lateinit var photoFile: File
@@ -177,9 +185,29 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
 
         }
 
+        /**
+         * Chapter 16 Challenge 1,
+         * Also note, we made ImageDialog.kt
+         * and a layout file to go with it.
+         */
+        photoView.setOnClickListener{
+            if(!photoFile.exists()){
+                Snackbar.make(view!!, "Please take a photo", Snackbar.LENGTH_SHORT).show()
+
+            }else{
+                val fm = fragmentManager
+                val dialog = ImageDialog().newInstance(photoFile.path)
+                dialog.setTargetFragment(this, PHOTO_TAG)
+                dialog.show(fm, "file_path")
+
+
+            }
+        }
+
 
 
     }
+
 
     override fun onStop() {
         super.onStop()
