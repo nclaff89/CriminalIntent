@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import java.io.File
+import java.text.DateFormat.getDateInstance
 import java.util.*
 private const val TAG = "CrimeFragment"
 private const val ARG_CRIME_ID = "crime_id"
@@ -199,7 +200,12 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
 
     private fun updateUI(){
         titleField.setText(crime.title)
-        dateButton.text = crime.date.toString()
+        /**
+         * Chapter 17 challenge
+         */
+        val myString = getDateInstance().format(crime.date)
+        //dateButton.text = crime.date.toString()
+        dateButton.text = myString
         solvedCheckBox.apply{
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
