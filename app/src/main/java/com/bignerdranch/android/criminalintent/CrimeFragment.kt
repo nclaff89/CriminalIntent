@@ -11,9 +11,11 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -38,6 +40,15 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
     private lateinit var suspectButton: Button
     private lateinit var photoButton: ImageButton
     private lateinit var photoView: ImageView
+
+    /**
+     * Chapter 16 challenge 2
+     */
+    private lateinit var observer: ViewTreeObserver
+    private var width: Int? = null
+    private var height: Int? = null
+
+
 
 
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy{
@@ -67,6 +78,20 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
         photoButton = view.findViewById(R.id.crime_camera) as ImageButton
         photoView = view.findViewById(R.id.crime_photo) as ImageView
 
+        observer = photoView.viewTreeObserver
+
+        /**
+         * Chapter 16 challenge 2,
+         *
+         */
+
+        observer.addOnGlobalLayoutListener {
+            width = photoView.measuredWidth
+            Log.d("width", "width = $width")
+            height = photoView.measuredHeight
+            Log.d("height", "height = $height")
+        }
+
         solvedCheckBox.apply{
             setOnCheckedChangeListener { _, isChecked ->
                 crime.isSolved = isChecked
@@ -86,6 +111,9 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
                 photoUri = FileProvider.getUriForFile(requireActivity(),
                     "com.bignerdranch.android.criminalintent.fileprovier",
                     photoFile)
+
+
+
 
                 updateUI()
             }
@@ -209,13 +237,19 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
             suspectButton.text = crime.suspect
         }
 
-        updatePhotoView()
+        updatePhotoView(width!!, height!!)
+
+
 
     }
 
-    private fun updatePhotoView(){
+    /**
+     * Chapter 16 challenge 2
+     * add params
+     */
+    private fun updatePhotoView(width: Int, height: Int){
         if(photoFile.exists()){
-            val bitmap = getScaledBitmap(photoFile.path, requireActivity())
+            val bitmap = getScaledBitmap(photoFile.path, width, height)
             photoView.setImageBitmap(bitmap)
         }else{
             photoView.setImageDrawable(null)
@@ -254,7 +288,9 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
             requestCode == REQUEST_PHOTO -> {
                 requireActivity().revokeUriPermission(photoUri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                updatePhotoView()
+
+
+                updatePhotoView(width!!, height!!)
             }
         }
 
