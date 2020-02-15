@@ -9,6 +9,10 @@
     <string name="crime_photo_no_image_description">Crime scene photo (not set)</string>
     <string name="crime_photo_image_description">Crime scene photo (set)</string>
 
+    <!-- chapter 18 challenge 2 -->
+    <string name="suspect_is">Suspect</string>
+    <string name="date_is">Date</string>
+
     <string name="new_crime">New Crime</string>
 
     <string name="crime_suspect_text">Choose Suspect</string>

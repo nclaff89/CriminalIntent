@@ -62,6 +62,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_details_label"/>
+
+    <TextView
+        android:id="@+id/crime_date_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/date_is"
+        android:labelFor="@+id/crime_date"/>
     <Button
         android:id="@+id/crime_date"
         android:layout_width="match_parent"
@@ -74,6 +81,12 @@
         android:layout_height="wrap_content"
         android:text="@string/crime_sovled_label"/>
 
+    <TextView
+        android:id="@+id/crime_suspect_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/suspect_is"
+        android:labelFor="@+id/crime_suspect"/>
     <Button
         android:id="@+id/crime_suspect"
         android:layout_width="match_parent"
