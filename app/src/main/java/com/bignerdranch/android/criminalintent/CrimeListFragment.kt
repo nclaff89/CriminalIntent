@@ -119,11 +119,26 @@ class CrimeListFragment : Fragment() {
             this.crime = crime
             titleTextView.text = this.crime.title
             dateTextView.text = this.crime.date.toString()
+
+
             solvedImageView.visibility = if(crime.isSolved) {
                 View.VISIBLE
+
             }else{
                 View.GONE
             }
+            /**
+             * This can be solved just by adding the content description in the XML File,
+             * I the view is invisible or GONE the accessibility reader just ignores it, so
+             * we really only need a crime solved string. See XML layout for list_item_crime
+             */
+//            /**
+//             * Chapter 18 challenge 1
+//             */
+//            if(crime.isSolved){
+//                solvedImageView.contentDescription = getString(R.string.crime_solved_description)
+//            }
+
         }
 
         override fun onClick(v: View?) {

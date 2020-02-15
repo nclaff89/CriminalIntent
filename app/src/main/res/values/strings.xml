@@ -8,6 +8,9 @@
     <string name="crime_photo_button_description">Take photo of crime scene</string>
     <string name="crime_photo_no_image_description">Crime scene photo (not set)</string>
     <string name="crime_photo_image_description">Crime scene photo (set)</string>
+    <!-- Chapter 18 challenge 1 -->
+    <string name="crime_not_solved_description">Crime status not solved</string>
+    <string name="crime_solved_description">Crime status solved</string>
 
     <string name="new_crime">New Crime</string>
 

@@ -11,6 +11,11 @@
     <string name="crime_report">%1$s!
         El crimen fue descubierto el %2$s. %3$s, y %4$s
     </string>
+
+    <!-- Chapter 18 challenge1, Sorry if this is inaccurate. Coppied from google translate -->
+    <string name="crime_not_solved_description">Estado del delito no resuelto</string>
+    <string name="crime_solved_description">Estado del crimen resuelto</string>
+
     <string name="crime_report_solved">El caso está resuelto</string>
     <string name="crime_report_unsolved">El caso no está resuelto</string>
     <string name="crime_report_no_suspect">no hay sospechoso.</string>
