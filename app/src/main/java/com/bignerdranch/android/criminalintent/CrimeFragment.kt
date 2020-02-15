@@ -257,6 +257,14 @@ class CrimeFragment :Fragment(), DatePickerFragment.Callbacks {
                 requireActivity().revokeUriPermission(photoUri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 updatePhotoView()
+                /**
+                 * Chapter 18 challenge 3, inform the user
+                 * that the crime photo was updated.
+                 */
+                photoView.postDelayed(Runnable {
+                    photoView.announceForAccessibility("Crime scene image updated")
+                }, 300)
+
             }
         }
 
